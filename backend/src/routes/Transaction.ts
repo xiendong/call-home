@@ -1,15 +1,29 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, Router } from 'express';
+import * as z from 'zod';
 import type { Transaction } from '../services';
 import { requireAdmin } from './middlewares';
+import { logger } from '../config';
 
-function TransactionRoutes(transactionService: typeof Transaction) {
+function TransactionRoutes(transactionService: typeof Transaction): Router {
   const router = express.Router();
 
   router.get(
     '/:userId/transactions/',
     requireAdmin,
     async (req: Request, res: Response) => {
-      const { userId } = req.params;
+      let validatedReq;
+      try {
+        const paramsSchema = z.object({
+          userId: z.string(),
+        });
+        const params = paramsSchema.parse(req.params);
+        validatedReq = { params };
+      } catch (error) {
+        logger.error(error);
+        return res.status(400).send(error);
+      }
+
+      const { userId } = validatedReq.params;
       const transactions = await transactionService.getTransactionsForUser(
         Number(userId)
       );
@@ -21,13 +35,25 @@ function TransactionRoutes(transactionService: typeof Transaction) {
     '/:userId/transactions/',
     requireAdmin,
     async (req: Request, res: Response) => {
-      const { userId } = req.params;
-      const { amount } = req.body as { amount: number | undefined };
-      if (!amount) {
-        return res
-          .status(400)
-          .json('Invalid transaction, amount must be specified');
+      let validatedReq;
+      try {
+        const paramsSchema = z.object({
+          userId: z.string(),
+        });
+        const bodySchema = z.object({
+          amount: z.number(),
+        });
+        const params = paramsSchema.parse(req.params);
+        const body = bodySchema.parse(req.body);
+        validatedReq = { params, body };
+      } catch (error) {
+        logger.error(error);
+        return res.status(400).send(error);
       }
+
+      const { userId } = validatedReq.params;
+      const { amount } = validatedReq.body;
+
       if (!Number(userId) || !Number(amount)) {
         return res.status(400).json('Invalid transaction.');
       }
