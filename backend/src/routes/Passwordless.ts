@@ -23,7 +23,7 @@ function PasswordlessRoutes(
       validatedReq = { body };
     } catch (error) {
       logger.error(error);
-      return res.status(400).send();
+      return res.status(400).send(error);
     }
 
     const { id } = req.user;
@@ -75,16 +75,18 @@ function PasswordlessRoutes(
       validatedReq = { body };
     } catch (error) {
       logger.error(error);
-      return res.status(400).send();
+      return res.status(400).send(error);
     }
 
     const { phoneNumber: rawPhoneNumber, code } = validatedReq.body;
+    // Valid phone number is checked using Twilio's API
     const phoneNumber = await normalizePhoneNumber(rawPhoneNumber, 'SG');
-
-    const { id: userId } = req.user;
-    if (!phoneNumber || !code) {
+    if (!phoneNumber) {
       return res.status(400).send();
     }
+
+    const { id: userId } = req.user;
+
     try {
       req.log.info('Received login attempt');
       const token = await auth0Service.signIn(phoneNumber, code);
