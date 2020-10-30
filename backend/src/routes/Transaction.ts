@@ -3,6 +3,7 @@ import * as z from 'zod';
 import type { Transaction } from '../services';
 import { requireAdmin } from './middlewares';
 import { logger } from '../config';
+import { stringToNumberTransformer } from './helpers/validation';
 
 function TransactionRoutes(transactionService: typeof Transaction): Router {
   const router = express.Router();
@@ -14,7 +15,7 @@ function TransactionRoutes(transactionService: typeof Transaction): Router {
       let validatedReq;
       try {
         const paramsSchema = z.object({
-          userId: z.string(),
+          userId: stringToNumberTransformer,
         });
         const params = paramsSchema.parse(req.params);
         validatedReq = { params };
@@ -25,7 +26,7 @@ function TransactionRoutes(transactionService: typeof Transaction): Router {
 
       const { userId } = validatedReq.params;
       const transactions = await transactionService.getTransactionsForUser(
-        Number(userId)
+        userId
       );
       return res.json(transactions);
     }
@@ -38,7 +39,7 @@ function TransactionRoutes(transactionService: typeof Transaction): Router {
       let validatedReq;
       try {
         const paramsSchema = z.object({
-          userId: z.string(),
+          userId: stringToNumberTransformer,
         });
         const bodySchema = z.object({
           amount: z.number(),
@@ -54,13 +55,10 @@ function TransactionRoutes(transactionService: typeof Transaction): Router {
       const { userId } = validatedReq.params;
       const { amount } = validatedReq.body;
 
-      if (!Number(userId) || !Number(amount)) {
-        return res.status(400).json('Invalid transaction.');
-      }
       const transaction = await transactionService.createTransaction({
-        userId: Number(userId),
+        userId,
         reference: 'admin',
-        amount: Number(amount),
+        amount,
       });
       return res.json(transaction);
     }

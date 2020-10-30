@@ -4,6 +4,7 @@ import { requireAdmin } from './middlewares';
 import { handleServiceError } from './transformers';
 import type { AllowlistEntry } from '../services';
 import { logger } from '../config';
+import { stringToNumberTransformer } from './helpers/validation';
 
 function AllowlistEntryRoutes(allowlistService: typeof AllowlistEntry): Router {
   const router = express.Router();
@@ -47,7 +48,7 @@ function AllowlistEntryRoutes(allowlistService: typeof AllowlistEntry): Router {
     let validatedReq;
     try {
       const paramsSchema = z.object({
-        id: z.string(),
+        id: stringToNumberTransformer,
       });
       const params = paramsSchema.parse(req.params);
       validatedReq = { params };
@@ -57,7 +58,7 @@ function AllowlistEntryRoutes(allowlistService: typeof AllowlistEntry): Router {
     }
 
     const { id } = validatedReq.params;
-    await allowlistService.deleteAllowlistEntry(Number(id));
+    await allowlistService.deleteAllowlistEntry(id);
     return res.status(200).send();
   });
 

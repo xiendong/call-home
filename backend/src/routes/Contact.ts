@@ -9,6 +9,7 @@ import { requireSelf } from './middlewares';
 
 import type { Contact } from '../services';
 import { logger } from '../config';
+import { stringToNumberTransformer } from './helpers/validation';
 
 function ContactRoutes(contactService: typeof Contact): Router {
   const router = express.Router();
@@ -17,7 +18,7 @@ function ContactRoutes(contactService: typeof Contact): Router {
     let validatedReq;
     try {
       const paramsSchema = z.object({
-        userId: z.string(),
+        userId: stringToNumberTransformer,
       });
       const params = paramsSchema.parse(req.params);
       validatedReq = { params };
@@ -27,7 +28,7 @@ function ContactRoutes(contactService: typeof Contact): Router {
     }
 
     const { userId } = validatedReq.params;
-    const contacts = await contactService.listContactsByUserId(Number(userId));
+    const contacts = await contactService.listContactsByUserId(userId);
     return res.status(200).json(contacts.map(contactToContactResponse));
   });
 
@@ -39,7 +40,7 @@ function ContactRoutes(contactService: typeof Contact): Router {
       let validatedReq;
       try {
         const paramsSchema = z.object({
-          userId: z.string(),
+          userId: stringToNumberTransformer,
         });
         const bodySchema = z.object({
           name: z.string(),
@@ -59,7 +60,7 @@ function ContactRoutes(contactService: typeof Contact): Router {
       try {
         req.log.info('CREATING', userId, contact);
         const savedContact = await contactService.createContact(
-          Number(userId),
+          userId,
           contact
         );
         return res.status(200).json(contactToContactResponse(savedContact));
@@ -77,8 +78,8 @@ function ContactRoutes(contactService: typeof Contact): Router {
       let validatedReq;
       try {
         const paramsSchema = z.object({
-          userId: z.string(),
-          contactId: z.string(),
+          userId: stringToNumberTransformer,
+          contactId: stringToNumberTransformer,
         });
         const bodySchema = z.object({
           name: z.string().optional(),
@@ -115,8 +116,8 @@ function ContactRoutes(contactService: typeof Contact): Router {
       let validatedReq;
       try {
         const paramsSchema = z.object({
-          userId: z.string(),
-          contactId: z.string(),
+          userId: stringToNumberTransformer,
+          contactId: stringToNumberTransformer,
         });
         const params = paramsSchema.parse(req.params);
         validatedReq = { params };
@@ -126,7 +127,7 @@ function ContactRoutes(contactService: typeof Contact): Router {
       }
 
       const { userId, contactId } = validatedReq.params;
-      await contactService.deleteContact(Number(userId), contactId);
+      await contactService.deleteContact(userId, contactId);
       return res.status(200).send();
     }
   );

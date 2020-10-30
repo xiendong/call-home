@@ -7,6 +7,7 @@ import type {
 } from '../services';
 import Stopwatch from '../util/stopwatch';
 import { logger } from '../config';
+import { stringToNumberTransformer } from './helpers/validation';
 
 function CallRoutes(
   callService: typeof CallService,
@@ -18,7 +19,7 @@ function CallRoutes(
     let validatedReq;
     try {
       const paramsSchema = z.object({
-        userId: z.string(),
+        userId: stringToNumberTransformer,
       });
       const params = paramsSchema.parse(req.params);
       validatedReq = { params };
@@ -30,7 +31,7 @@ function CallRoutes(
     const { userId } = validatedReq.params;
     const stopwatch = new Stopwatch();
     stopwatch.start();
-    const userCalls = await callService.getUserCallsForPeriod(Number(userId));
+    const userCalls = await callService.getUserCallsForPeriod(userId);
     const twilioCalls = await Promise.all(
       userCalls.map((call) =>
         twilioCallService.getTwilioCallByParentSid(call.incomingTwilioCallSid)

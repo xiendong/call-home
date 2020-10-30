@@ -8,6 +8,7 @@ import type {
   TwilioCall as TwilioCallService,
 } from '../services';
 import type { CallStatus } from '../models';
+import { stringToNumberTransformer } from './helpers/validation';
 
 const { VoiceResponse } = twilio.twiml;
 
@@ -57,8 +58,8 @@ function TwilioRoutes(
       let validatedReq;
       try {
         const bodySchema = z.object({
-          userId: z.string(),
-          contactId: z.string(),
+          userId: stringToNumberTransformer,
+          contactId: stringToNumberTransformer,
           CallSid: z.string(),
         });
         const body = bodySchema.parse(req.body);
@@ -77,8 +78,8 @@ function TwilioRoutes(
 
       try {
         const { phoneNumber } = await callService.createCall({
-          userId: Number(userId),
-          contactId: Number(contactId),
+          userId,
+          contactId,
           incomingTwilioCallSid,
         });
         await twilioCallService.createTwilioCall({
