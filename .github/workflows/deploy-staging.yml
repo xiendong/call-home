@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      HEROKU_APP=call-home-staging
+      HEROKU_APP="call-home-staging"
       PUBLIC_URL="https://call-home-staging.herokuapp.com"
     steps:
       - uses: actions/checkout@v2
