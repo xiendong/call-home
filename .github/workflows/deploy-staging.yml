@@ -10,12 +10,13 @@ on:
 #      - master     Master for staging, tag for prod
 
 
+env:
+  HEROKU_APP="call-home-staging"
+  PUBLIC_URL="https://call-home-staging.herokuapp.com"
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      HEROKU_APP="call-home-staging"
-      PUBLIC_URL="https://call-home-staging.herokuapp.com"
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 12
@@ -29,6 +30,8 @@ jobs:
         run: |
           VERSION=$(date +%Y-%m-%dT%H:%M:%S%z)
           echo "$VERSION"
+          echo "${{ env.HEROKU_APP }}"
+          echo "${{ env.PUBLIC_URL }}"
           echo "TODO"
 #          docker build --build-arg PUBLIC_URL="${PUBLIC_URL}" --build-arg RELEASE_DATE="${VERSION}" . -t call-home
 #      - name: Install Heroku CLI
