@@ -18,9 +18,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: test
+      - name: Install Heroku CLI
         run:
-          echo "TEST"
+          curl https://cli-assets.heroku.com/install.sh | sh
+          echo "Heroku CLI Installed"
 #      - name: Build, tag, and push image to Heroku docker registry
 #        env:
 #          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
