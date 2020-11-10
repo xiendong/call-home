@@ -19,6 +19,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+      - name: Run tests
+        run:
+          echo "Update step when there are tests to run"
+      - name: Build docker container
+        run:
+          echo "TODO"
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
@@ -28,18 +34,20 @@ jobs:
           (
             echo "$HEROKU_CREDENTIALS_EMAIL"  # or you can plaintext it, if you're feeling adventurous
             echo "$HEROKU_CREDENTIALS_PASSWORD"
-          ) | heroku login
+
+          ) | heroku login -i
           echo "Logged in to Heroku"
         env:
           HEROKU_CREDENTIALS_EMAIL: TEST_EMAIL
           HEROKU_CREDENTIALS_PASSWORD: TEST_PASSWORD
 #          HEROKU_CREDENTIALS_EMAIL: ${{ secrets.HEROKU_CREDENTIALS_EMAIL }}
 #          HEROKU_CREDENTIALS_PASSWORD: ${{ secrets.HEROKU_CREDENTIALS_PASSWORD }}
-#      - name: Build, tag, and push image to Heroku docker registry
-#        env:
-#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-#          ECR_REPOSITORY: rehab-singapore
-#          IMAGE_TAG: ${{ github.event.pull_request.head.sha }}
-#        run: |
-#          cd ./backend
-#          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+      - name: Push container to Heroku registry
+        run:
+          echo "TODO"
+      - name: Deploy app to Staging
+        run:
+          echo "TODO"
+      - name: Logout of Heroku
+        run:
+          heroku logout
