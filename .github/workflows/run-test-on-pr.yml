@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - set-up-github-actions
+#      - master     Master for staging, tag for prod
 
 
 jobs:
@@ -19,7 +20,7 @@ jobs:
         with:
           node-version: 12.x
       - name: Install Heroku CLI
-        run:
+        run: |
           curl https://cli-assets.heroku.com/install.sh | sh
           echo "Heroku CLI Installed"
 #      - name: Build, tag, and push image to Heroku docker registry
