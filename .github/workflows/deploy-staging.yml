@@ -11,8 +11,8 @@ on:
 
 
 env:
-  HEROKU_APP="call-home-staging"
-  PUBLIC_URL="https://call-home-staging.herokuapp.com"
+  HEROKU_APP: call-home-staging
+  PUBLIC_URL: https://call-home-staging.herokuapp.com
 
 jobs:
   build:
