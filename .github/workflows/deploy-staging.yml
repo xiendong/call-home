@@ -1,0 +1,63 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - set-up-github-actions
+#      - master     Master for staging, tag for prod
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HEROKU_APP=call-home-staging
+      PUBLIC_URL="https://call-home-staging.herokuapp.com"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Run tests
+        run:
+          echo "Update step when there are tests to run"
+      - name: Build docker container
+        run: |
+          VERSION=$(date +%Y-%m-%dT%H:%M:%S%z)
+          echo "$VERSION"
+#          docker build --build-arg PUBLIC_URL="${PUBLIC_URL}" --build-arg RELEASE_DATE="${VERSION}" . -t call-home
+          echo "TODO"
+#      - name: Install Heroku CLI
+#        run: |
+#          curl https://cli-assets.heroku.com/install.sh | sh
+#          echo "Heroku CLI Installed"
+#      - name: Login to Heroku
+#        run: |
+#          (
+#            echo "$HEROKU_CREDENTIALS_EMAIL"  # or you can plaintext it, if you're feeling adventurous
+#            echo "$HEROKU_CREDENTIALS_PASSWORD"
+#
+#          ) | heroku login -i
+#          echo "Logged in to Heroku"
+#          echo "TODO"
+#        env:
+#          HEROKU_CREDENTIALS_EMAIL: TEST_EMAIL
+#          HEROKU_CREDENTIALS_PASSWORD: TEST_PASSWORD
+#          HEROKU_CREDENTIALS_EMAIL: ${{ secrets.HEROKU_CREDENTIALS_EMAIL }}
+#          HEROKU_CREDENTIALS_PASSWORD: ${{ secrets.HEROKU_CREDENTIALS_PASSWORD }}
+#      - name: Push container to Heroku registry
+#        run:
+#          docker tag call-home registry.heroku.com/${HEROKU_APP}/web
+#          echo "TODO"
+#      - name: Deploy app to Staging
+#        run: |
+#          docker push registry.heroku.com/${HEROKU_APP}/web
+#          heroku container:release web --app ${HEROKU_APP}
+#          echo "TODO"
+#      - name: Logout of Heroku
+#        run:
+#          heroku logout
