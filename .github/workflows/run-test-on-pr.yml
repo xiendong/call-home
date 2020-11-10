@@ -18,9 +18,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-        - name: test
-          run:
-            echo "TEST"
+      - name: test
+        run:
+          echo "TEST"
 #      - name: Build, tag, and push image to Heroku docker registry
 #        env:
 #          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
