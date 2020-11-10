@@ -29,8 +29,8 @@ jobs:
         run: |
           VERSION=$(date +%Y-%m-%dT%H:%M:%S%z)
           echo "$VERSION"
-#          docker build --build-arg PUBLIC_URL="${PUBLIC_URL}" --build-arg RELEASE_DATE="${VERSION}" . -t call-home
           echo "TODO"
+#          docker build --build-arg PUBLIC_URL="${PUBLIC_URL}" --build-arg RELEASE_DATE="${VERSION}" . -t call-home
 #      - name: Install Heroku CLI
 #        run: |
 #          curl https://cli-assets.heroku.com/install.sh | sh
