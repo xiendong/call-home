@@ -23,6 +23,16 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
           echo "Heroku CLI Installed"
+      - name: Login to Heroku
+        run: |
+          (
+            echo "$HEROKU_CREDENTIALS_EMAIL"  # or you can plaintext it, if you're feeling adventurous
+            echo "$HEROKU_CREDENTIALS_PASSWORD"
+          ) | heroku login
+          echo "Logged in to Heroku"
+        env:
+          HEROKU_CREDENTIALS_EMAIL: "${{ secrets.HEROKU_CREDENTIALS_EMAIL }}"
+          $HEROKU_CREDENTIALS_PASSWORD: "${{ secrets.$HEROKU_CREDENTIALS_PASSWORD }}"
 #      - name: Build, tag, and push image to Heroku docker registry
 #        env:
 #          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
