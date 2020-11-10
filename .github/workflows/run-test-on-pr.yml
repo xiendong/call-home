@@ -31,8 +31,10 @@ jobs:
           ) | heroku login
           echo "Logged in to Heroku"
         env:
-          HEROKU_CREDENTIALS_EMAIL: "${{ secrets.HEROKU_CREDENTIALS_EMAIL }}"
-          $HEROKU_CREDENTIALS_PASSWORD: "${{ secrets.$HEROKU_CREDENTIALS_PASSWORD }}"
+          HEROKU_CREDENTIALS_EMAIL: TEST_EMAIL
+          HEROKU_CREDENTIALS_PASSWORD: TEST_PASSWORD
+#          HEROKU_CREDENTIALS_EMAIL: ${{ secrets.HEROKU_CREDENTIALS_EMAIL }}
+#          HEROKU_CREDENTIALS_PASSWORD: ${{ secrets.HEROKU_CREDENTIALS_PASSWORD }}
 #      - name: Build, tag, and push image to Heroku docker registry
 #        env:
 #          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
